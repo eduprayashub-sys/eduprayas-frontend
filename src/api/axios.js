@@ -3,7 +3,7 @@ import axios from "axios";
 // Create a reusable axios instance for the entire app
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5002", // Backend URL
-    withCredentials: false, // ✅ Set to false for token-based auth
+    withCredentials: true, 
   headers: {
     "Content-Type": "application/json",
   },
