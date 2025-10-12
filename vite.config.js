@@ -1,17 +1,20 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 5173, // you can change this if needed
+    port: 5173,
     proxy: {
       "/api": {
-        target: "http://localhost:5002", // backend server
+        target: "http://localhost:5002", // ✅ Local backend (development)
         changeOrigin: true,
         secure: false,
       },
     },
+  },
+  // ✅ Important for Vercel build
+  build: {
+    outDir: "dist", // default output folder for production
   },
 });

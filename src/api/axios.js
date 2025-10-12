@@ -1,18 +1,18 @@
 import axios from "axios";
 
-// Create a reusable axios instance for the entire app
+// 🌐 Create a reusable axios instance for the entire app
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5002", // Backend URL
-    withCredentials: true, 
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5002", // Backend base URL
+  withCredentials: false, // Change to true only if backend needs cookies
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Optional: Add interceptors (for auth tokens, error handling, etc.)
+// 🧩 Add interceptors for attaching token & handling errors
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token"); // If using JWT login
+    const token = localStorage.getItem("token"); // JWT token if available
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -24,7 +24,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error("API Error:", error.response?.data || error.message);
+    console.error("❌ API Error:", error.response?.data || error.message);
     return Promise.reject(error);
   }
 );
