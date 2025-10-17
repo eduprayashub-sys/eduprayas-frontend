@@ -16,7 +16,7 @@ const Login = () => {
 
     if (token) {
       localStorage.setItem("token", token);
-      navigate("/"); // redirect to dashboard/home
+      navigate("/"); // redirect to homepage
     }
   }, [location, navigate]);
 
@@ -24,26 +24,31 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
     try {
+      // ✅ Correct API call (automatically uses /api from .env)
       const res = await api.post("/auth/login", { email, password });
+
       localStorage.setItem("token", res.data.token);
       navigate("/");
     } catch (err) {
       console.error("❌ Login failed:", err);
-      setError("Invalid credentials or server error.");
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Invalid credentials or server error.");
+      }
     }
   };
 
-  // ✅ Google login link (redirects to backend)
+  // ✅ Google login redirect (backend route)
   const handleGoogleLogin = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL.replace(
-      "/api",
-      ""
-    )}/auth/google`;
+    const backendBase = import.meta.env.VITE_API_URL.replace("/api", "");
+    window.location.href = `${backendBase}/api/auth/google`;
   };
 
   return (
-    <div className="flex justify-center items-center min-h-[80vh]">
+    <div className="flex justify-center items-center min-h-[80vh] bg-gray-50">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
         <h2 className="text-2xl font-bold text-blue-600 mb-4 text-center">
           Login to Eduprayas
@@ -87,11 +92,7 @@ const Login = () => {
           onClick={handleGoogleLogin}
           className="flex items-center justify-center w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 mt-3"
         >
-          <img
-            src="/google-icon.svg"
-            alt="Google"
-            className="w-5 h-5 mr-2"
-          />
+          <img src="/google-icon.svg" alt="Google" className="w-5 h-5 mr-2" />
           Sign in with Google
         </button>
 

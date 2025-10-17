@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../api/axios"; // ✅ central axios instance
+import api from "../api/axios"; // ✅ Central axios instance
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -18,18 +18,19 @@ const Register = () => {
     setLoading(true);
 
     try {
-      // ✅ use api instance (baseURL already added)
-      await api.post("/auth/register", {
-        name,
-        email,
-        password,
-      });
+      // ✅ Correct API endpoint
+      const res = await api.post("/auth/register", { name, email, password });
 
-      setSuccess("🎉 Registration successful! Redirecting to login...");
+      setSuccess(res.data.message || "🎉 Registration successful! Redirecting...");
       setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
       console.error("❌ Registration error:", err);
-      setError("User already exists or invalid details.");
+
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("User already exists or invalid details.");
+      }
     } finally {
       setLoading(false);
     }
