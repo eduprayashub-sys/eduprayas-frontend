@@ -1,6 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import api from "../api/axios"; // ✅ Central axios instance
+import { Link, useNavigate } from "react-router-dom";
+import * as ReactRouterDom from "react-router-dom";
+import api from "../api/axios";
+
+// fallback (fix for Link not defined issue on Vercel)
+const SafeLink = ReactRouterDom.Link || Link;
+
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -35,6 +40,10 @@ const Register = () => {
       setLoading(false);
     }
   };
+    
+  <SafeLink to="/login" className="text-blue-600 hover:underline">
+  Login
+</SafeLink>
 
   return (
     <div className="flex justify-center items-center min-h-[85vh] bg-gray-50">
