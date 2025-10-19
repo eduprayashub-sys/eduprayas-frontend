@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import api from "../api/axios"; // ✅ Central axios instance
 
 const Register = () => {
