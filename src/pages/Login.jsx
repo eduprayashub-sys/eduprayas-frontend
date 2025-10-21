@@ -1,5 +1,5 @@
-import { Link, useNavigate, useLocation } from "react-router-dom";
 import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom"; // ✅ Link included
 import api from "../api/axios";
 
 const Login = () => {
@@ -9,46 +9,37 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ✅ Auto-login if redirected from Google OAuth
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const token = params.get("token");
-
     if (token) {
       localStorage.setItem("token", token);
-      navigate("/"); // redirect to homepage
+      navigate("/");
     }
   }, [location, navigate]);
 
-  // ✅ Handle normal login
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
     try {
-      // ✅ Correct API call (automatically uses /api from .env)
       const res = await api.post("/auth/login", { email, password });
-
       localStorage.setItem("token", res.data.token);
       navigate("/");
     } catch (err) {
       console.error("❌ Login failed:", err);
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
-      } else {
-        setError("Invalid credentials or server error.");
-      }
+      setError("Invalid credentials or server error.");
     }
   };
 
-  // ✅ Google login redirect (backend route)
   const handleGoogleLogin = () => {
-    const backendBase = import.meta.env.VITE_API_URL.replace("/api", "");
-    window.location.href = `${backendBase}/api/auth/google`;
+    window.location.href = `${import.meta.env.VITE_API_URL.replace(
+      "/api",
+      ""
+    )}/api/auth/google`;
   };
 
   return (
-    <div className="flex justify-center items-center min-h-[80vh] bg-gray-50">
+    <div className="flex justify-center items-center min-h-[80vh]">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
         <h2 className="text-2xl font-bold text-blue-600 mb-4 text-center">
           Login to Eduprayas
@@ -87,7 +78,6 @@ const Login = () => {
           </button>
         </form>
 
-        {/* 🔹 Google Login Button */}
         <button
           onClick={handleGoogleLogin}
           className="flex items-center justify-center w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 mt-3"

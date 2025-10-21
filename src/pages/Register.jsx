@@ -1,11 +1,6 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import * as ReactRouterDom from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // ✅ Link & useNavigate both imported
 import api from "../api/axios";
-
-// fallback (fix for Link not defined issue on Vercel)
-const SafeLink = ReactRouterDom.Link || Link;
-
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -23,27 +18,17 @@ const Register = () => {
     setLoading(true);
 
     try {
-      // ✅ Correct API endpoint
       const res = await api.post("/auth/register", { name, email, password });
-
       setSuccess(res.data.message || "🎉 Registration successful! Redirecting...");
       setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
       console.error("❌ Registration error:", err);
-
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
-      } else {
-        setError("User already exists or invalid details.");
-      }
+      if (err.response?.data?.message) setError(err.response.data.message);
+      else setError("User already exists or invalid details.");
     } finally {
       setLoading(false);
     }
   };
-    
-  <SafeLink to="/login" className="text-blue-600 hover:underline">
-  Login
-</SafeLink>
 
   return (
     <div className="flex justify-center items-center min-h-[85vh] bg-gray-50">
