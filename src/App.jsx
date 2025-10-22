@@ -20,9 +20,6 @@ import Admin from "./pages/Admin";
 import Profile from "./pages/Profile";
 import Contact from "./pages/Contact";
 
-
-
-
 const App = () => {
   const isAuthenticated = localStorage.getItem("token");
 
@@ -32,8 +29,8 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       ) : (
         <div className="flex h-screen bg-gray-100">
@@ -47,6 +44,7 @@ const App = () => {
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/home" element={<Home />} />
                   <Route path="/users" element={<Users />} />
+
                   <Route
                     path="/tests"
                     element={
@@ -64,6 +62,7 @@ const App = () => {
                     }
                   />
                   <Route path="/questions" element={<Questions />} />
+
                   <Route
                     path="/results"
                     element={
@@ -72,7 +71,8 @@ const App = () => {
                       </ProtectedRoute>
                     }
                   />
-                   {/* 👤 Profile Page */}
+
+                  {/* 👤 Profile */}
                   <Route
                     path="/profile"
                     element={
@@ -81,7 +81,17 @@ const App = () => {
                       </ProtectedRoute>
                     }
                   />
-                  <Route path="/admin" element={<Admin />} />
+
+                  {/* 👑 Admin Panel (Protected & Admin-only) */}
+                  <Route
+                    path="/admin/*"
+                    element={
+                      <ProtectedRoute adminOnly={true}>
+                        <Admin />
+                      </ProtectedRoute>
+                    }
+                  />
+
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </main>
